@@ -12,24 +12,20 @@ import android.util.Log;
 
 public class JokeTest extends ApplicationTestCase<Application> {
 
-    private static final String LOG_TAG = "NonEmptyStringTest";
+    private static final String LOG_TAG = "JOKE of the year";
 
     public JokeTest() {
         super(Application.class);
     }
 
-    @SuppressWarnings("unchecked")
     public void test() {
 
-        // Testing that Async task successfully retrieves a non-empty string
-        // You can test this from androidTest -> Run 'All Tests'
-        Log.v("NonEmptyStringTest", "Running NonEmptyStringTest test");
         String result = null;
         JokesEndPointsAsynkTask endpointsAsyncTask = new JokesEndPointsAsynkTask(getContext(), null, jokeListener);
         endpointsAsyncTask.execute();
         try {
             result = endpointsAsyncTask.get();
-            Log.d(LOG_TAG, "Retrieved a non-empty string successfully: " + result);
+            Log.d(LOG_TAG, "result : "+ result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,7 +35,7 @@ public class JokeTest extends ApplicationTestCase<Application> {
     private JokeListener jokeListener = new JokeListener() {
         @Override
         public void onJokeRecieved(String joke) {
-
+            assertNotNull(joke);
         }
     };
 
