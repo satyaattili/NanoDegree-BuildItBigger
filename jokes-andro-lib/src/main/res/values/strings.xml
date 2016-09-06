@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">jokes-andro-lib</string>
+    <string name="joke_key">joke_key</string>
+</resources>

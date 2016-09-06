@@ -1,0 +1,75 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
+
+    defaultConfig {
+        applicationId "com.udacity.gradle.builditbigger"
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        free {
+            applicationId "com.udacity.gradle.builditbigger.free"
+            versionCode 1
+            versionName "1.0.0"
+        }
+
+        premium {
+            applicationId "com.udacity.gradle.builditbigger.premium"
+            versionCode 1
+            versionName "1.0.0"
+        }
+    }
+}
+
+task testProject {
+    dependsOn(['startDevServer','runMyTests','shutdownDevServer'])
+}
+
+task startDevServer {
+    dependsOn ':app-backend:appengineRun'
+    evaluationDependsOn(":app-backend")
+    project(':app-backend').appengine.daemon = true
+}
+
+task runMyTests {
+    dependsOn ':app:connectedAndroidTest'
+    mustRunAfter "startDevServer"
+}
+
+task shutdownDevServer {
+    dependsOn ':app-backend:appengineStop'
+    mustRunAfter "runMyTests"
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    // Added for AdMob
+    compile project(path: ':app-backend', configuration: 'android-endpoints')
+    compile project(':jokes-java-lib')
+    compile project(':jokes-andro-lib')
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.google.firebase:firebase-ads:9.4.0'
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
+    compile 'com.android.support:support-v4:24.2.0'
+
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support:support-annotations:24.2.0'
+
+}
